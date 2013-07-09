@@ -1,0 +1,483 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Marakana &bull; Try code</title>
+    <meta charset="utf-8" />
+
+    <script  src="lib/jqueryPlugin/jquery-1.9.1.min.js"></script>
+    <script>
+        (function($){
+
+            $.fn.enableEdit = function()
+            {
+                return this.each(function(){
+
+                    var currentCaretPosition;
+                    var queque = 0;
+                    var isHankey = false;
+                    var workEl = this;
+
+                    var spaceKey = 32, enterKey = 13;
+
+                    $(this).attr('contenteditable',true);
+
+                    $(this).bind('keydown',function(e){
+                        console.log(e.keyCode);
+                    });
+
+                    $(this).bind('keyup',function(e){
+                        if(e.keyCode==spaceKey)
+                        {
+                            allEventRefresh(this);
+                        }
+                    });
+
+
+                    $(this).bind('click',function(e){
+                        $(this).attr('contenteditable',true);
+                    });
+
+                    function selectRange(){
+                        var sel = window.getSelection();
+
+                        var startWordNode = sel.anchorNode.parentNode;
+                        var startWordIdx = $(startWordNode).index();
+                        var startSentenceNode = startWordNode.parentNode;
+                        var startSentenceIdx = $(startSentenceNode).index();
+
+                        var endWordNode = sel.focusNode.parentNode;
+                        var endWordIdx = $(endWordNode).index();
+
+                        var endSentenceNode = endWordNode.parentNode;
+                        var endSentenceIdx = $(endSentenceNode).index();
+
+                        var editBox = startSentenceNode.parentNode;
+
+
+
+                        if(startSentenceIdx > endSentenceIdx)
+                        {
+                            startWordNode = sel.focusNode.parentNode;
+                            startWordIdx = $(startWordNode).index();
+                            startSentenceNode = startWordNode.parentNode;
+                            startSentenceIdx = $(startSentenceNode).index();
+
+                            endWordNode = sel.anchorNode.parentNode;
+                            endWordIdx = $(endWordNode).index();
+                            endSentenceNode = endWordNode.parentNode;
+                            endSentenceIdx = $(endSentenceNode).index();
+
+
+                        }
+                        else if(startSentenceIdx == endSentenceIdx)
+                        {
+                            if(startWordIdx > endWordIdx)
+                            {
+                                startWordNode = sel.focusNode.parentNode;
+                                startWordIdx = $(startWordNode).index();
+                                startSentenceNode = startWordNode.parentNode;
+                                startSentenceIdx = $(startSentenceNode).index();
+
+                                endWordNode = sel.anchorNode.parentNode;
+                                endWordIdx = $(endWordNode).index();
+                                endSentenceNode = endWordNode.parentNode;
+                                endSentenceIdx = $(endSentenceNode).index();
+
+                            }
+                        }
+
+                        var selectedSentence = [];
+                        if(startSentenceIdx == endSentenceIdx)
+                        {
+
+                            var gtVal = startWordIdx;
+                            var ltVal = (endWordIdx - gtVal);
+                            selectedSentence = $(startSentenceNode).find('.lcWord:gt('+gtVal+'):lt('+ltVal+'), .lcWord:eq('+gtVal+')');
+                        }
+                        else
+                        {
+
+                            var gtVal = startWordIdx;
+                            var ltVal = endWordIdx;
+                            for(var i = startSentenceIdx ; i <= endSentenceIdx ; i++)
+                            {
+                                var addSentence=[];
+
+                                if(i==startSentenceIdx)
+                                {
+                                    addSentence = $(editBox).find('.clSentence:eq('+i+')').find('.lcWord:gt('+gtVal+'), .lcWord:eq('+gtVal+')');
+                                }
+                                else if(i==endSentenceIdx)
+                                {
+                                    addSentence = $(editBox).find('.clSentence:eq('+i+')').find('.lcWord:lt('+ltVal+'), .lcWord:eq('+ltVal+')');
+                                }
+                                else
+                                {
+                                    addSentence = $(editBox).find('.clSentence:eq('+i+')').find('.lcWord');
+                                }
+                                console.log(addSentence);
+                                selectedSentence.push(addSentence);
+                            }
+
+                        }
+
+
+
+                        console.log(selectedSentence);
+                    }
+
+                    function allEventRefresh(el,evt)
+                    {
+
+                        console.log('allEventRefresh');
+
+                        var pureTexts = new Array();
+
+                        var pureText = $(el).justtext();
+                        $(el).html($(el).html().replace(pureText,''));
+
+                                                pureTexts.push(pureText);
+
+                        var sentenceDivs =  $(el).find('div').not('.clSentence');
+                        for(var i = 0 ; i < sentenceDivs.length ; i++)
+                        {
+                            pureTexts.push($(sentenceDivs[i]).justtext());
+
+                            $(sentenceDivs[i]).remove();
+                        }
+
+                        for(i in pureTexts)
+                        {
+                            var pureText = pureTexts[i];
+                                   console.log("pureText : "+pureText);
+                            var newContentWithSpans='';
+                            for(var i = 0 ; i < pureText.length ; i++)
+                            {
+                                newContentWithSpans += '<span class=lcWord>'+pureText[i]+'</span>';
+                            }
+
+                            $(el).append("<div class=clSentence>"+newContentWithSpans+"</div>");
+                            workEl = $(el).find('div:first-child');
+                        }
+
+/*
+
+                        $(el).contents().filter(function(){
+                            return this.nodeType === 3;
+                        }).remove();
+
+*/
+
+/*
+                        $(el).find('div.clSentence').each(function(idx,sentence){
+
+                            $(sentence).find('span.lcWord').each(function(idx,word){
+                                //console.log(word);
+                                if($(word).text().length>1)
+                                {
+                                    var newContent = $(word).text().substr(1,$(word).text().length+1);
+
+                                    $(word).text($(word).text().replace(newContent,''));
+
+                                    newContentWithSpans = '';
+                                    for(var i = 0 ; i < newContent.length ; i++)
+                                    {
+                                        newContentWithSpans += '<span class=lcWord>'+newContent[i]+'</span>';
+
+                                    }
+
+
+                                    $(word).after(newContentWithSpans);
+
+                                    setCaretPosition(workEl,getCaretPosition(workEl)+newContent.length);
+                                }
+
+                            });
+                        });
+                        */
+
+
+
+
+                        if(evt && evt.keyCode==13)
+                        {
+
+                            var sel = window.getSelection();
+                            if (sel.rangeCount) {
+                                var range = sel.getRangeAt(0);
+                                console.log('check');
+                                var container = range.commonAncestorContainer;
+
+                                while(container.nodeType!=1)
+                                {
+                                    container =  container.parentNode;
+                                }
+
+                                workEl = $(workEl).next();
+
+                                $(workEl).addClass('clSentence');
+                                setCaretPosition(workEl,getCaretPosition(workEl));
+                            }
+                        }
+                        else
+                        {
+                            setCaretPosition(workEl,getCaretPosition(workEl));
+                        }
+
+
+                    }
+
+                    function setCaretPosition(el,pos)
+                    {
+
+                        if (window.getSelection) {
+                            var sel = window.getSelection();
+                            var idx = ((pos-1) >= 0 ) ? pos-1 : 0;
+                            var targetEl = $(el).children()[idx];
+
+                            sel.collapse(targetEl,1);
+                        }
+                    }
+
+                    function getCaretPosition(el)
+                    {
+
+                        var caretPos = 0, containerEl = null, sel, range;
+                        if (window.getSelection) {
+                            sel = window.getSelection();
+                            if (sel.rangeCount) {
+                                range = sel.getRangeAt(0);
+
+                                var container = range.commonAncestorContainer;
+
+                                if(container)
+                                {
+                                    while(container.nodeType!=1)
+                                    {
+                                        container =  container.parentNode;
+                                    }
+
+                                    if(container.nodeType==1)
+                                    {
+                                        if(container.tagName == 'DIV')
+                                        {
+                                            caretPos = $(container).find('span').length;
+
+                                        }
+                                        else // tagName == 'SPAN'
+                                        {
+
+                                            while(container.previousElementSibling)
+                                            {
+                                                container = container.previousElementSibling;
+
+                                                caretPos++;
+                                            }
+
+                                            if(caretPos!=0){
+                                                caretPos += 1;
+                                            }
+                                            else if(container.tagName=='SPAN')
+                                            {
+                                                caretPos=1;
+                                            }
+                                        }
+                                    }
+
+
+
+                                }
+
+
+                            }
+
+
+                        }
+                        return caretPos;
+                    }
+                });
+            }
+
+
+            $.fn.justtext = function() {
+                return $(this).clone()
+                        .children()
+                        .remove()
+                        .end()
+                        .text();
+
+            };
+
+        }(jQuery));
+
+        window.onload=function()
+        {
+           $('.editor').enableEdit();
+
+           $('.button').on('click',selectRange);
+
+
+           var ctrlDown = false;
+           var zDown = false;
+           var ctrlKey = 17,shiftKey = 16, zKey = 90;
+
+           $('#preventUndoEditable').keydown(function(e){
+                if(e.keyCode == ctrlKey)
+                {
+                    ctrlDown = true;
+                }
+           }).keyup(function(e){
+                if(e.keyCode == ctrlKey)
+                {
+                    ctrlDown = false;
+                }
+           });
+
+
+
+            $('#preventUndoEditable').keydown(function(e){
+                if(ctrlDown && e.keyCode == zKey)
+                {
+                    console.log('ctrl z')
+                    e.preventDefault();
+                }
+            });
+
+         }
+
+        function selectRange(){
+            var sel = window.getSelection();
+
+            var startWordNode = sel.anchorNode.parentNode;
+            var startWordIdx = $(startWordNode).index();
+            var startSentenceNode = startWordNode.parentNode;
+            var startSentenceIdx = $(startSentenceNode).index();
+
+            var endWordNode = sel.focusNode.parentNode;
+            var endWordIdx = $(endWordNode).index();
+
+            var endSentenceNode = endWordNode.parentNode;
+            var endSentenceIdx = $(endSentenceNode).index();
+
+            var editBox = startSentenceNode.parentNode;
+
+
+
+            if(startSentenceIdx > endSentenceIdx)
+            {
+                startWordNode = sel.focusNode.parentNode;
+                startWordIdx = $(startWordNode).index();
+                startSentenceNode = startWordNode.parentNode;
+                startSentenceIdx = $(startSentenceNode).index();
+
+                endWordNode = sel.anchorNode.parentNode;
+                endWordIdx = $(endWordNode).index();
+                endSentenceNode = endWordNode.parentNode;
+                endSentenceIdx = $(endSentenceNode).index();
+
+
+            }
+            else if(startSentenceIdx == endSentenceIdx)
+            {
+                if(startWordIdx > endWordIdx)
+                {
+                    startWordNode = sel.focusNode.parentNode;
+                    startWordIdx = $(startWordNode).index();
+                    startSentenceNode = startWordNode.parentNode;
+                    startSentenceIdx = $(startSentenceNode).index();
+
+                    endWordNode = sel.anchorNode.parentNode;
+                    endWordIdx = $(endWordNode).index();
+                    endSentenceNode = endWordNode.parentNode;
+                    endSentenceIdx = $(endSentenceNode).index();
+
+                }
+            }
+
+            var selectedSentence = [];
+            if(startSentenceIdx == endSentenceIdx)
+            {
+
+                var gtVal = startWordIdx;
+                var ltVal = (endWordIdx - gtVal);
+                selectedSentence = $(startSentenceNode).find('.lcWord:gt('+gtVal+'):lt('+ltVal+'), .lcWord:eq('+gtVal+')');
+            }
+            else
+            {
+
+                var gtVal = startWordIdx;
+                var ltVal = endWordIdx;
+                for(var i = startSentenceIdx ; i <= endSentenceIdx ; i++)
+                {
+                    var addSentence=[];
+
+                    if(i==startSentenceIdx)
+                    {
+                        addSentence = $(editBox).find('.clSentence:eq('+i+')').find('.lcWord:gt('+gtVal+'), .lcWord:eq('+gtVal+')');
+                    }
+                    else if(i==endSentenceIdx)
+                    {
+                        addSentence = $(editBox).find('.clSentence:eq('+i+')').find('.lcWord:lt('+ltVal+'), .lcWord:eq('+ltVal+')');
+                    }
+                    else
+                    {
+                        addSentence = $(editBox).find('.clSentence:eq('+i+')').find('.lcWord');
+                    }
+                    console.log(addSentence);
+                    selectedSentence.push(addSentence);
+                }
+
+            }
+
+
+
+            console.log(selectedSentence);
+        }
+
+    </script>
+
+    <style>
+        #test{
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .editor * {
+            -webkit-user-select: 'text';
+            -khtml-user-select: 'text';
+            -moz-user-select: 'text';
+            -ms-user-select: 'text';
+            user-select: 'text';
+        }
+
+    </style>
+</head>
+<body>
+<article>
+
+    <section>
+        <div class="editor"></div>
+
+        <!--    <span>J</span><span>u</span><span>s</span><span>t</span><span>&nbsp;</span><span>c</span><span>l</span><span>i</span><span>c</span><span>k</span>
+-->
+        <div id='test'>
+            <p class="center">
+                <a class="button" >Back to tutorial</a>
+            </p>
+
+            aaaaa<div>1234<div>aaaa2a<a>33</a></div></div><span>ssssssssss</span>
+        </div>
+        <div id='effect1'>effect1</div>
+
+        <div class="editor"></div>
+
+        <div contenteditable="true" id='preventUndoEditable'>1111</div>
+        <div contenteditable="true">2222</div>
+    </section>
+</article>
+</body>
+</html>

@@ -1,0 +1,60 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+
+
+#mainLayout {
+    height: 100%;
+    width : 100%;
+    background-color: #f6f6f6;
+    overflow : hidden;
+}
+
+#mainCanvasLayout{
+    width: 100%;
+    height : 100%;
+    left:200px;
+    position: relative;
+    background: #0da861;
+}
+
+#workSpace{
+    width: 100%;
+    height : 100%;
+    display: block;
+}
+
+
+#mainCanvasLayout, #mainLeftLayout,#mainRightLayout{
+    display: inline-block;
+
+}
+
+
+#mainRightLayout{
+    display : none;
+    background : #222;
+    width: 224px;
+    height : 100%;
+    margin-left : 0px;
+    float : right;
+    z-index : 110;
+    right : 0px;
+    position: absolute;
+}
+
+
+
+
+#ImageInsertDialog{
+    display: none;
+}
+
+
+
+

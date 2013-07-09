@@ -1,0 +1,44 @@
+body{
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+    background : -webkit-gradient(radial, 50% 50%, 0, 50% 50%,800, from(rgba(0, 0, 0, 0.73)), to(rgba(0, 0, 0, 0.83)));
+    /*background : url('http://www.vaio.or.kr/files/attach/images/9979/986/764/6ca6c64d64e4d5fac89983506956f5c6.jpg') ;*/
+    background-size: cover;
+
+}
+
+#root{
+    bottom: 0;
+    right: 0;
+
+    perspective: 400;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    display : block;
+    position : absolute;
+    -webkit-transform-origin : top left;
+    -webket-transition : all 0x ease-in-out;
+    -webkit-transform-style: preserve-3d;
+    -webkit-transform-origin: 0% 0%;
+
+    width : 0px;
+    height : 0px;
+    -webkit-perspective : 400px;
+}
+
+#world{
+    position : absolute;
+    width : 0px;
+    height : 0px;
+    -webkit-transform-origin: 0% 0%;
+    -webkit-transform-style: preserve-3d;
+    -webkit-transform :  rotateX(0deg) rotateY(0deg) rotateZ(0deg) translate3d(0px,0px,0px);
+}
