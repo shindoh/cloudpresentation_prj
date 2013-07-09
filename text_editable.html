@@ -135,9 +135,10 @@
                         var pureTexts = new Array();
 
                         var pureText = $(el).justtext();
-                        $(el).html($(el).html().replace(pureText,''));
 
-                                                pureTexts.push(pureText);
+
+
+                        pureTexts.push(pureText);
 
                         var sentenceDivs =  $(el).find('div').not('.clSentence');
                         for(var i = 0 ; i < sentenceDivs.length ; i++)
@@ -160,6 +161,29 @@
                             $(el).append("<div class=clSentence>"+newContentWithSpans+"</div>");
                             workEl = $(el).find('div:first-child');
                         }
+
+                        $(el).find('.lcWord').each(function(idx)
+                        {
+
+                            var pureText = $(this).text();
+                            var textEls = '';
+                            if(pureText && pureText.length > 1)
+                            {
+                                for(var i = 0 ; i < pureText.length ; i++)
+                                {
+                                    textEls+='<span class=lcWord>'+pureText[i]+'</span>';
+                                }
+                            }
+                            if(textEls.length>1)
+                            {
+
+                                $(this).parent().insertAt(idx,textEls);
+                                $(this).remove();
+                            }
+
+
+                        })
+
 
 /*
 
