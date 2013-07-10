@@ -78,7 +78,7 @@ define(['underscore','backbone',
                }
                else
                {
-                   this.views[model.cid] = new ObjectView({model: model,id:'view_'+model.cid,'cameraModule' : this.cameraModule}).render();
+                   this.views[model.cid] = new ObjectView({model: model,id:'view_'+model.cid, 'cameraModule' : this.cameraModule}).render();
                }
 
 

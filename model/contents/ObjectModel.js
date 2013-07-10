@@ -16,8 +16,7 @@ define(['jquery','underscore','backbone'],
             scaleX : 1,
             scaleY : 1,
             scaleZ : 1,
-            top : 0,
-            left : 0,
+            matrix3d : null,
 
             //style
             borderWidth : 0
@@ -26,6 +25,7 @@ define(['jquery','underscore','backbone'],
 
         doCommited : true,
         commitBeforeData : {},
+        controller : null,
 
         initialize : function()
         {
@@ -34,6 +34,8 @@ define(['jquery','underscore','backbone'],
                 this.set({boxShadows: new Array()});
             }
         },
+
+
 
         set : function(key,value)
         {
@@ -45,6 +47,11 @@ define(['jquery','underscore','backbone'],
                 this.doCommited = false;
 
             }
+        },
+
+        isSelected : function()
+        {
+            return this.selected;
         },
 
         commitToCollection : function(key,value)
