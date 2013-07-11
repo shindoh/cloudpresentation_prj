@@ -86,7 +86,7 @@ define(['underscore','backbone',
 
            addToHistory : function(historyData)
            {
-                   this.history.push(historyData);
+                this.history.push(historyData);
            },
 
            redo : function()
@@ -110,8 +110,28 @@ define(['underscore','backbone',
                        var key = historyItem.key;
                        var value = historyItem.value;
 
-                       console.log("redo value : "+value);
-                       model.set(key,value);
+                       if(typeof(key)=='string')
+                       {
+                           model.set(key,value);
+                       }
+                       else
+                       {
+                           var setData ={}
+                           for(var i = 0 ; i < key.length ; i++)
+                           {
+                               setData[key[i]] = value;
+                           }
+
+                           model.set(setData);
+                       }
+
+
+
+                       this.trigger('recoverEvent',{
+                           'model' : model,
+                           'key' : key,
+                           'value' : value
+                       });
                    }
                }
            },
@@ -119,6 +139,7 @@ define(['underscore','backbone',
            undo : function()
            {
                 var historyItem = this.history.pop();
+
                 if(historyItem)
                 {
                     this.redoHistory.push(historyItem);
@@ -137,7 +158,26 @@ define(['underscore','backbone',
                         var key = historyItem.key;
                         var value = historyItem.prevValue;
 
-                        model.set(key,value);
+                        if(typeof(key)=='string')
+                        {
+                            model.set(key,value);
+                        }
+                        else
+                        {
+                            var setData ={}
+                            for(var i = 0 ; i < key.length ; i++)
+                            {
+                                setData[key[i]] = value;
+                            }
+
+                            model.set(setData);
+                        }
+
+                        this.trigger('recoverEvent',{
+                            'model' : model,
+                            'key' : key,
+                            'value' : value
+                        });
                     }
 
                 }

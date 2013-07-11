@@ -45,6 +45,27 @@ define(['jquery','underscore','backbone',
                         this_.activeStylePanel(styleValue,this.getSelected());
                     }
                 });
+
+                this.contentsCollection.bind('recoverEvent',function(param)
+                {
+                    var styleValue = $("#style_selector").val();
+                    var model = param.model;
+                    var key = param.key;
+
+                    if(typeof(key)=='string')
+                    {
+                        model.commitBeforeData[key] = param.value;
+                    }
+                    else
+                    {
+                        for(var i = 0 ; i < key.length; i++)
+                        {
+                            model.commitBeforeData[key[i]] = param.value;
+                        }
+                    }
+
+                    this_.activeStylePanel(styleValue,model);
+                });
             },
 
             render : function()
@@ -52,7 +73,6 @@ define(['jquery','underscore','backbone',
                 var this_ = this;
 
                 $('#styleDialog').draggable();
-
 
                 $("#style_selector").change(function() {
                     var styleValue = $(this).val();
@@ -328,6 +348,9 @@ define(['jquery','underscore','backbone',
                         $('#bottomLeftCornerSlider').prev().find('input').trigger(event);
 
                         $('#bottomRightCornerSlider').prev().find('input').trigger(event);
+
+
+
                     },
 
                     change: function(event, ui) {
@@ -343,6 +366,13 @@ define(['jquery','underscore','backbone',
                         $('#bottomLeftCornerSlider').prev().find('input').trigger(event);
 
                         $('#bottomRightCornerSlider').prev().find('input').trigger(event);
+
+                        var keys = ['borderTopLeftRadius',
+                            'borderTopRightRadius',
+                            'borderBottomLeftRadius',
+                            'borderBottomRightRadius'];
+
+                        model_.commitToCollection(keys,val);
                     }
                 });
 

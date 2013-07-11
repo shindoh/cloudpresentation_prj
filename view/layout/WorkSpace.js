@@ -115,7 +115,7 @@ define(['jquery','underscore','backbone',
            {
 
 
-               for(var i = 0 ; i < 200 ; i++)
+               for(var i = 0 ; i < 1 ; i++)
                {
                    var rotateX =  Math.floor(Math.random() * 359) + 1;
                    var rotateY =  Math.floor(Math.random() * 359) + 1;

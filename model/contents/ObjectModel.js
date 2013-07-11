@@ -56,7 +56,13 @@ define(['jquery','underscore','backbone'],
 
         commitToCollection : function(key,value)
         {
+
             var prevValue = this.commitBeforeData[key];
+
+            if(typeof(key)!='string')
+            {
+                prevValue = this.commitBeforeData[key[0]];
+            }
 
             if(typeof(value)=='object')
             {
@@ -108,12 +114,29 @@ define(['jquery','underscore','backbone'],
 
             if(isChanged)
             {
-                console.log(historyData);
+
 
                 this.doCommited = true;
                 this.commitBeforeData = 0;
-                this.set(key,value);
 
+                if(typeof(key)=='string')
+                {
+                    this.set(key,value);
+                }
+                else
+                {
+                    var setData = {};
+
+                    for(var i = 0;  i < key.length ; i++)
+                    {
+                        setData[key[i]] = value;
+                    }
+
+
+                    this.set(setData);
+                }
+
+                              console.log(historyData);
                 this.collection.addToHistory(historyData);
             }
         },

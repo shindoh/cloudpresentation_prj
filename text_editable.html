@@ -5,6 +5,9 @@
 <title>Marakana &bull; Try code</title>
 <meta charset="utf-8" />
 
+<style>
+
+</style>
 <script  src="lib/jqueryPlugin/jquery-1.9.1.min.js"></script>
 <script>
 (function($){
@@ -18,7 +21,7 @@
             var isHankey = false;
             var workEl = this;
 
-            var spaceKey = 32, enterKey = 13;
+            var spaceKey = 32, enterKey = 13, ctrlKey = 17;
 
             $(this).attr('contenteditable',true);
 
@@ -27,9 +30,14 @@
             });
 
             $(this).bind('keyup',function(e){
+
                 if(e.keyCode==spaceKey)
                 {
                     allEventRefresh(this);
+                }
+                else if(e.keyCode==ctrlKey)
+                {
+                    selectRange();
                 }
             });
 
@@ -129,11 +137,6 @@
 
             function allEventRefresh(el,evt)
             {
-
-
-
-
-                console.log('caret : ' + window.getSelection().getRangeAt(0).startOffset);
                 console.log('allEventRefresh');
 
                 var pureTexts = new Array();
@@ -143,7 +146,11 @@
                     return this.nodeType === 3;
                 }).remove();
 
-                pureTexts.push(pureText);
+                if(pureText.length >0)
+                {
+                    pureTexts.push(pureText);
+                }
+
 
                 var sentenceDivs =  $(el).find('div').not('.clSentence');
                 for(var i = 0 ; i < sentenceDivs.length ; i++)
@@ -153,24 +160,36 @@
                     $(sentenceDivs[i]).remove();
                 }
 
-                for(i in pureTexts)
+                console.log(pureTexts);
+
+                for(idx in pureTexts)
                 {
-                    var pureText = pureTexts[i];
-                    console.log("pureText : "+pureText);
+                    var pureText = pureTexts[idx];
+
                     var newContentWithSpans='';
                     for(var i = 0 ; i < pureText.length ; i++)
                     {
+                        if(pureText[i]==' ')
+                        {
+                            pureText[i] = '&nbsp;'
+                        }
                         newContentWithSpans += '<span class=lcWord>'+pureText[i]+'</span>';
                     }
+                    if(pureText.length == 0)
+                    {
+                        newContentWithSpans += '<span class=lcWord><br></span>';
+                    }
 
-                    $(el).append("<div class=clSentence>"+newContentWithSpans+"</div>");
-                    workEl = $(el).find('div:first-child');
+                    $(el).append("<div class='clSentence'>"+newContentWithSpans+"</div>");
+                    console.log('count '+idx)
                 }
+
+
 
                 $(el).find('.lcWord').each(function(idx){
                     var pureText = $(this).text();
                     var textEls = '';
-                    console.log('aaa',pureText && (pureText.length>1));
+                    console.log('aaa',pureText);
                     if(pureText && (pureText.length>1))
                     {
 
@@ -180,8 +199,10 @@
                         }
                     }
 
+
                     if(textEls.length > 1)
                     {
+
                         $(this).after(textEls);
                         $(this).remove();
                     }

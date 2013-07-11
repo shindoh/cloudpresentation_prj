@@ -9,7 +9,7 @@ define(['jquery','underscore','backbone',
             {
                 this.model.bind('change',this.updateView,this);
                 this.cameraModule = this.options.cameraModule;
-                console.log(this.cameraModule);
+
                 this.eventBind();
             },
 

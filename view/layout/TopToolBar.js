@@ -294,7 +294,19 @@ define(['jquery','underscore','backbone',
                             {
                                 model.set('background','#'+hex);
                             }
+                        },
+
+                        onSubmit : function()
+                        {
+                            var model = this_.contentsCollection.getSelected();
+
+                            if(model)
+                            {
+                                model.commitToCollection('background',value);
+                            }
+
                         }
+
                     });
 
                     $('.objectBackgroundColorButtonToolTip').ColorPickerSetColor(value);
@@ -324,6 +336,10 @@ define(['jquery','underscore','backbone',
                         $(this).css('display','none');
                     })
                 }
+
+
+
+
             },
 
             activeLayoutSelection : function()
