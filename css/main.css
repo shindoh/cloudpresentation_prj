@@ -40,14 +40,6 @@ html, body {
 }
 
 
-.sequence_view{
-    width: 1024px;
-    height : 768px;
-    display: block;
-    border : 1px solid #000;
-
-}
-
 
 
 #world {
@@ -55,7 +47,6 @@ html, body {
     height: 0;
     width: 0;
     -webkit-transform-style: preserve-3d;
-
 }
 
 

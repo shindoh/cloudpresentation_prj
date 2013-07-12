@@ -21,6 +21,7 @@ define(['jquery','underscore','backbone',
             styleView : null,
             contentsCollection : null,
             sequenceCollection : null,
+            cameraModule : null,
 
             isObjectSelected : false,
 
@@ -30,6 +31,7 @@ define(['jquery','underscore','backbone',
 
                 this.contentsCollection = this.options.contentsCollection;
                 this.sequenceCollection = this.options.sequenceCollection;
+                this.cameraModule = this.options.cameraModule;
                 this.render();
                 this.bindEvents();
                 this.initInsertButtons();
@@ -85,7 +87,10 @@ define(['jquery','underscore','backbone',
                         }
                     ));
  */
-                    this_.sequenceCollection.add(new SequenceModel());
+
+                    this_.sequenceCollection.add(new SequenceModel({
+                        'matrix3d' : this_.cameraModule.getCamera().getMatrixQuery()
+                    }));
                 });
 
             },

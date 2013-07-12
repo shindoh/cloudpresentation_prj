@@ -4,13 +4,18 @@ define(['jquery','underscore','backbone',
         var ObjectView = Backbone.View.extend({
 
             cameraModule : null,
+            world : null,
+            disableControl : false,
 
             initialize : function()
             {
                 this.model.bind('change',this.updateView,this);
                 this.cameraModule = this.options.cameraModule;
 
-                this.eventBind();
+                this.disableControl =  this.options.disableControl;
+
+                this.world = this.options.world;
+
             },
 
             events : {
@@ -19,6 +24,7 @@ define(['jquery','underscore','backbone',
 
             eventBind : function()
             {
+
                 var this_ = this;
                 var model_ = this.model;
                 var prevX = 0 ;
@@ -58,7 +64,7 @@ define(['jquery','underscore','backbone',
 
                         if(e.ctrlKey  && e.shiftKey)
                         {
-                            var rot3d = this_.controller.getRotation(0,0,scalar2+scalar1);
+                            var rot3d = model_.controller.getRotation(0,0,scalar2+scalar1);
 
                             model_.set({
                                     'rotateX':rot3d.getX(),
@@ -68,7 +74,7 @@ define(['jquery','underscore','backbone',
                         }
                         else if(e.ctrlKey)
                         {
-                            var rot3d = this_.controller.getRotation(scalar1,scalar2);
+                            var rot3d = model_.controller.getRotation(scalar1,scalar2);
 
                             model_.set({
                                     'rotateX':rot3d.getX(),
@@ -78,7 +84,7 @@ define(['jquery','underscore','backbone',
                         }
                         else
                         {
-                            var pos3d = this_.controller.getPosition(scalar1,scalar2);
+                            var pos3d = model_.controller.getPosition(scalar1,scalar2);
 
                             model_.set({
                                     'translateX':pos3d.getX(),
@@ -114,7 +120,7 @@ define(['jquery','underscore','backbone',
                 $('#workSpace').bind('mousewheel',function(e){
                     if(model_.isSelected())
                     {
-                        var pos3d = this_.controller.getDepth(-e.originalEvent.wheelDelta/10);
+                        var pos3d = model_.controller.getDepth(-e.originalEvent.wheelDelta/10);
                         model_.set({
                                 'translateX':pos3d.getX(),
                                 'translateY':pos3d.getY(),
@@ -134,18 +140,16 @@ define(['jquery','underscore','backbone',
 
             render : function()
             {
-                $('#workSpace').find('#world').append($(this.el));
+
+                $(this.world).append($(this.el));
                 $(this.el).append('<div class=objectWrap></div>');
-                this.controller = new ObjectController(this.cameraModule.getCamera());
-                this.controller.showFacade();
-                var angle = this.controller.getRotation(0,0,0);
 
-                this.model.set('rotateX',angle.getX());
-                this.model.set('rotateY',angle.getY());
-                this.model.set('rotateZ',angle.getZ());
-
-                console.log(angle.getX(),angle.getY(),angle.getZ());
                 this.updateView();
+
+                if(!this.disableControl)
+                {
+                    this.eventBind();
+                }
 
                 return this;
             },
@@ -192,10 +196,10 @@ define(['jquery','underscore','backbone',
                 var width = this.model.get('width');
                 var height = this.model.get('height');
 
-                this.controller.setRotation(this.model.get('rotateX'),this.model.get('rotateY'),this.model.get('rotateZ'));
-                this.controller.setPosition(this.model.get('translateX'),this.model.get('translateY'),this.model.get('translateZ'));
+                this.model.controller.setRotation(this.model.get('rotateX'),this.model.get('rotateY'),this.model.get('rotateZ'));
+                this.model.controller.setPosition(this.model.get('translateX'),this.model.get('translateY'),this.model.get('translateZ'));
 
-                var matrix3d = this.controller.getMatrixQuery();
+                var matrix3d = this.model.controller.getMatrixQuery();
 
                 $(this.el).css({
 

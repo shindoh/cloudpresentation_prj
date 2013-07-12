@@ -139,7 +139,7 @@ define(['jquery','underscore','backbone',
 
            render : function()
            {
-               for(var i = 0 ; i < 2 ; i++)
+               for(var i = 0 ; i < 2;  i++)
                {
                    var rotateX =  Math.floor(Math.random() * 359) + 1;
                    var rotateY =  Math.floor(Math.random() * 359) + 1;
@@ -158,6 +158,8 @@ define(['jquery','underscore','backbone',
                        rotateY:0,
                        rotateZ:0
                    });
+
+
 
                    this.contentsCollection.add(textModel1);
                }

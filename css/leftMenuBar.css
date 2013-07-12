@@ -179,6 +179,32 @@
 }
 
 #sequenceArrayContainer li{
-    margin : 0 auto;
-    border : 1px solid #fff;
+    margin : 0px;
+    padding : 0px;
+    border : 1px solid #333;
+}
+
+
+.sequence_view{
+    width: 1024px;
+    height : 768px;
+    display: inline-block;
+    -webkit-perspective: 600;
+    -webkit-perspective-origin: 50% 50%;
+    border : 1px solid #000;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    margin : 0px;
+    padding : 0px;
+    background: #0da861;
+}
+
+.sequence_view_world{
+    position: absolute;
+    height: 0;
+    width: 0;
+    -webkit-transform-style: preserve-3d;
 }
