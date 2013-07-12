@@ -3,17 +3,24 @@ define(['jquery','underscore','backbone',
     'view/dialog/StyleView',
 
     'model/contents/TextModel',
+    'model/contents/FrameModel',
+    'model/sequence/SequenceModel',
+
     'jquery_knob'],
     function($,_,Backbone,
              TopToolBarTemplate,
              StyleView,
-             TextModel){
+
+             TextModel,
+             FrameModel,
+             SequenceModel){
 
         var topToolBar = Backbone.View.extend({
             template : TopToolBarTemplate,
 
             styleView : null,
             contentsCollection : null,
+            sequenceCollection : null,
 
             isObjectSelected : false,
 
@@ -22,6 +29,7 @@ define(['jquery','underscore','backbone',
                 _.bindAll(this);
 
                 this.contentsCollection = this.options.contentsCollection;
+                this.sequenceCollection = this.options.sequenceCollection;
                 this.render();
                 this.bindEvents();
                 this.initInsertButtons();
@@ -46,9 +54,6 @@ define(['jquery','underscore','backbone',
             {
                 var this_ = this;
                 $('#textInsertButton').click(function(){
-
-
-
                     this_.contentsCollection.add(new TextModel({
                             width : 100,
                             height : 100,
@@ -58,12 +63,35 @@ define(['jquery','underscore','backbone',
                             translateZ:0,
 
                             rotateX:0,
-                            rotateY:44,
+                            rotateY:0,
                             rotateZ:0
                         }
                     ));
                 });
+
+                $('#frameInsertButton').click(function(){
+/*
+                    this_.contentsCollection.add(new FrameModel({
+                            width : 1024,
+                            height : 768,
+
+                            translateX:0,
+                            translateY:0,
+                            translateZ:0,
+
+                            rotateX:0,
+                            rotateY: 0,
+                            rotateZ:0
+                        }
+                    ));
+ */
+                    this_.sequenceCollection.add(new SequenceModel());
+                });
+
             },
+
+
+
 
             activeFontFamilySelection : function ()
             {

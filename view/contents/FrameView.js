@@ -24,8 +24,6 @@ define(['jquery','underscore','backbone',
 
                     var item = $("<div class=frame>");
 
-                    console.log('frame : ' + width+" "+ height);
-
                     item.css({
                         'background' : 'transparent',
                         'width' : width,
@@ -40,8 +38,6 @@ define(['jquery','underscore','backbone',
                         'margin' : '0px'
                     });
 
-                    $(this.el).css('z-index',1);
-
                     objectWrap.append(item);
 
                     model.set('width',width);
@@ -49,7 +45,6 @@ define(['jquery','underscore','backbone',
 
                     this.updateView();
 
-                    model.containObject();
                 }
 
                 return this;

@@ -5,6 +5,7 @@ define(
      'backbone',
 
      'collection/ContentsCollection',
+     'collection/SequenceCollection',
 
      'view/layout/WorkSpace',
      'view/layout/TopToolBar',
@@ -41,6 +42,7 @@ define(
     ],
     function($, _, Backbone,
              ContentsCollection,
+             SequenceCollection,
              WorkSpace,TopToolBar,LeftMenu){
 
     var MainView = Backbone.View.extend({
@@ -78,8 +80,12 @@ define(
         initCollections : function()
         {
             this.contentsCollection = new ContentsCollection();
-
             this.contentsCollection.setCameraModule(this.cameraModule);
+
+            this.sequenceCollection = new SequenceCollection();
+            this.sequenceCollection.setCameraModule(this.cameraModule);
+            this.sequenceCollection.setContentsCollection(this.contentsCollection);
+
         },
 
         initWorkspace : function()
@@ -94,7 +100,8 @@ define(
         initTopToolBar : function()
         {
             var topToolBar = new TopToolBar({
-                "contentsCollection" : this.contentsCollection
+                "contentsCollection" : this.contentsCollection,
+                "sequenceCollection" : this.sequenceCollection
             });
         },
 

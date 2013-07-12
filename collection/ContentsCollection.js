@@ -74,7 +74,7 @@ define(['underscore','backbone',
                }
                else if(model.get('type') == 'frame')
                {
-                   this.views[model.cid] = new FrameView({model: model,id:'view_'+model.cid}).render();
+                   this.views[model.cid] = new FrameView({model: model,id:'view_'+model.cid,'cameraModule' : this.cameraModule}).render();
                }
                else
                {
