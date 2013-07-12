@@ -101,8 +101,7 @@ define(
         {
             var topToolBar = new TopToolBar({
                 "contentsCollection" : this.contentsCollection,
-                "sequenceCollection" : this.sequenceCollection,
-                'cameraModule' : this.cameraModule
+                "sequenceCollection" : this.sequenceCollection
             });
         },
 
