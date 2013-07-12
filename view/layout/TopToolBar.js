@@ -2,12 +2,13 @@ define(['jquery','underscore','backbone',
     'text!template/layout/TopToolBar.html',
     'view/dialog/StyleView',
 
+    'model/contents/ObjectModel',
     'model/contents/TextModel',
     'jquery_knob'],
     function($,_,Backbone,
              TopToolBarTemplate,
              StyleView,
-             TextModel){
+             ObjectModel,TextModel){
 
         var topToolBar = Backbone.View.extend({
             template : TopToolBarTemplate,
@@ -53,12 +54,12 @@ define(['jquery','underscore','backbone',
                             width : 100,
                             height : 100,
 
-                            translateX:100,
-                            translateY:100,
+                            translateX:0,
+                            translateY:0,
                             translateZ:0,
 
                             rotateX:0,
-                            rotateY:44,
+                            rotateY:0,
                             rotateZ:0
                         }
                     ));

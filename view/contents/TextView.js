@@ -18,7 +18,7 @@ define(['jquery','underscore','backbone',
                     var objectWrap = $(this.el).find('.objectWrap');
                     var editbox = $("<div class='textEditBox' >");
                     objectWrap.append(editbox);
-                    editbox.html('messagehere');
+                    editbox.html('vvvvvvvvvvvvvvxxxvvvvvvvvvvvvvv');
                 }
 
                 this.editor = $(this.el).find('.objectWrap').find('.textEditBox').enableEdit();
@@ -35,6 +35,7 @@ define(['jquery','underscore','backbone',
 
                 });
 
+                this.testt();
                 return this;
             },
 

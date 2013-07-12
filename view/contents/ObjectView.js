@@ -43,6 +43,11 @@ define(['jquery','underscore','backbone',
                     moveEnable = true;
                     prevX = e.clientX;
                     prevY = e.clientY;
+                    if(e.shiftKey){
+                        this_.controller.lookFacade();
+                        this_.controller.zoomFacade(parseInt(model_.get('width')),parseInt(model_.get('height')));
+                    }
+
                 })
 
                  $('#workSpace').bind('mousemove',function(e){
@@ -165,17 +170,33 @@ define(['jquery','underscore','backbone',
                 $('#workSpace').find('#world').append($(this.el));
                 $(this.el).append('<div class=objectWrap></div>');
                 this.controller = new ObjectController(this.cameraModule.getCamera());
-                this.controller.showFacade();
-                var angle = this.controller.getRotation(0,0,0);
 
-                this.model.set('rotateX',angle.getX());
-                this.model.set('rotateY',angle.getY());
-                this.model.set('rotateZ',angle.getZ());
-
-                console.log(angle.getX(),angle.getY(),angle.getZ());
                 this.updateView();
 
                 return this;
+            },
+
+            testt: function(){
+
+                var w = parseInt( this.model.get('width') );
+                var h = parseInt( this.model.get('height') );
+
+                var angle = this.controller.getFacadeAngle();
+                var pos = this.controller.getFacadePosition( w, h );
+
+                console.log("wh",angle.getX(),pos.getX())
+                console.log("wh",angle.getX(),pos.getY())
+                console.log("wh",angle.getX(),pos.getZ())
+
+                this.model.set({
+                    'rotateX': angle.getX(),
+                    'rotateY': angle.getY(),
+                    'rotateZ': angle.getZ(),
+                    'translateX': pos.getX()-w/2,
+                    'translateY': pos.getY()+h/2,
+                    'translateZ': pos.getZ()
+                });
+
             },
 
             cssRenderer : function()
