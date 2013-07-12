@@ -475,6 +475,7 @@ define(['jquery','underscore','backbone',
 
                     $('#TopToolBarWrap').find('.knob_input').each(function(){
                         var key = $(this).data('key');
+                        console.log(key + " : " + params[key]);
                         $(this).val(params[key]);
 
                         $(this).val(params[key])

@@ -184,9 +184,6 @@ define(['jquery','underscore','backbone',
                 var angle = this.controller.getFacadeAngle();
                 var pos = this.controller.getFacadePosition( w, h );
 
-                console.log("wh",angle.getX(),pos.getX())
-                console.log("wh",angle.getX(),pos.getY())
-                console.log("wh",angle.getX(),pos.getZ())
 
                 this.model.set({
                     'rotateX': angle.getX(),
