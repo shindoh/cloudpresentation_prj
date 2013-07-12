@@ -8,6 +8,7 @@ define(
 
      'view/layout/WorkSpace',
      'view/layout/TopToolBar',
+     'view/layout/LeftMenu',
 
      'jquery_knob',
      'jquery_jlayout',
@@ -40,7 +41,7 @@ define(
     ],
     function($, _, Backbone,
              ContentsCollection,
-             WorkSpace,TopToolBar){
+             WorkSpace,TopToolBar,LeftMenu){
 
     var MainView = Backbone.View.extend({
 
@@ -64,9 +65,14 @@ define(
 
             this.initTopToolBar();
             this.initWorkspace();
-
+            this.initLeftMenu();
 
             this.shortKey();
+        },
+
+        initLeftMenu : function()
+        {
+            this.leftMenu = new LeftMenu();
         },
 
         initCollections : function()

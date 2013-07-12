@@ -181,7 +181,7 @@ define(['jquery','underscore','backbone'],
                     this.set(setData);
                 }
 
-
+                console.log(historyData);
                 this.collection.addToHistory(historyData);
             }
         },

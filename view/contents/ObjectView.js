@@ -96,44 +96,16 @@ define(['jquery','underscore','backbone',
 
                      if(model_.isSelected())
                      {
-                         var currX = e.clientX;
-                         var currY = e.clientY;
 
-                         var scalar1 = currX-prevX;
-                         var scalar2 = currY-prevY;
+                         model_.commitToCollection({
+                                 'rotateX': model_.get('rotateX'),
+                                 'rotateY': model_.get('rotateY'),
+                                 'rotateZ': model_.get('rotateZ'),
+                                 'translateX': model_.get('translateX'),
+                                 'translateY': model_.get('translateY'),
+                                 'translateZ': model_.get('translateZ')
+                             });
 
-                         if(e.ctrlKey  && e.shiftKey)
-                         {
-
-                             var rot3d = this_.controller.getRotation(0,0,scalar2+scalar1);
-
-                             model_.commitToCollection({
-                                     'rotateX':rot3d.getX(),
-                                     'rotateY':rot3d.getY(),
-                                     'rotateZ':rot3d.getZ()}
-                             );
-                         }
-                         else if(e.ctrlKey)
-                         {
-
-                             var rot3d = this_.controller.getRotation(scalar1,scalar2);
-
-                             model_.commitToCollection({
-                                     'rotateX':rot3d.getX(),
-                                     'rotateY':rot3d.getY(),
-                                     'rotateZ':rot3d.getZ()}
-                             );
-                         }
-                         else
-                         {
-                             var pos3d = this_.controller.getPosition(scalar1,scalar2);
-
-                             model_.commitToCollection({
-                                     'translateX':pos3d.getX(),
-                                     'translateY':pos3d.getY(),
-                                     'translateZ':pos3d.getZ()}
-                             );
-                         }
                      }
 
                 });
