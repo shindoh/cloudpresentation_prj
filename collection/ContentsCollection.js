@@ -60,25 +60,28 @@ define(['underscore','backbone',
 
            addFunc : function(model)
            {
+
+               var world = $('#workSpace').find('#world');
+               model.initController(this.cameraModule.getCamera());
                if(model.get('type') == 'text')
                {
-                   this.views[model.cid] = new TextView({model: model,id:'view_'+model.cid,'cameraModule' : this.cameraModule}).render();
+                   this.views[model.cid] = new TextView({model: model,id:'view_'+model.cid,'cameraModule' : this.cameraModule, 'world' : world }).render();
                }
                else if(model.get('type') == 'image')
                {
-                    this.views[model.cid] = new ImageView({model: model,id:'view_'+model.cid,'cameraModule' : this.cameraModule}).render();
+                    this.views[model.cid] = new ImageView({model: model,id:'view_'+model.cid,'cameraModule' : this.cameraModule, 'world' : world }).render();
                }
                else if(model.get('type') == 'video')
                {
-                   this.views[model.cid] = new VideoView({model: model,id:'view_'+model.cid}).render();
+                   this.views[model.cid] = new VideoView({model: model,id:'view_'+model.cid, 'world' : world }).render();
                }
                else if(model.get('type') == 'frame')
                {
-                   this.views[model.cid] = new FrameView({model: model,id:'view_'+model.cid}).render();
+                   this.views[model.cid] = new FrameView({model: model,id:'view_'+model.cid,'cameraModule' : this.cameraModule, 'world' : world }).render();
                }
                else
                {
-                   this.views[model.cid] = new ObjectView({model: model,id:'view_'+model.cid, 'cameraModule' : this.cameraModule}).render();
+                   this.views[model.cid] = new ObjectView({model: model,id:'view_'+model.cid, 'cameraModule' : this.cameraModule, 'world' : world}).render();
                }
 
 

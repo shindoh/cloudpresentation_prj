@@ -102,9 +102,10 @@
     border-top : 1px solid #555555;
 }
 
-#lmListButtonListWrap li:hover{
+#lmListButtonListWrap #lmSettingButton:hover{
     background : #333;
 }
+
 
 .lmButtonName{
     color : #ddd;
@@ -164,4 +165,46 @@
     color : #f6f6f6;
     float : right;
     padding : 4px;
+}
+
+#sequenceArrayContainer{
+    list-style:none;
+    margin : 0px;
+    padding : 0px;
+    margin-top : 20px;
+    padding-top : 10px;
+    padding-bottom : 10px;
+    overflow-y: auto;
+    height : 400px;
+}
+
+#sequenceArrayContainer li{
+    margin : 0px;
+    padding : 0px;
+    border : 1px solid #333;
+}
+
+
+.sequence_view{
+    width: 1024px;
+    height : 768px;
+    display: inline-block;
+    -webkit-perspective: 600;
+    -webkit-perspective-origin: 50% 50%;
+    border : 1px solid #000;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    margin : 0px;
+    padding : 0px;
+    background: #0da861;
+}
+
+.sequence_view_world{
+    position: absolute;
+    height: 0;
+    width: 0;
+    -webkit-transform-style: preserve-3d;
 }
