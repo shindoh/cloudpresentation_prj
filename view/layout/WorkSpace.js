@@ -1,9 +1,11 @@
 define(['jquery','underscore','backbone',
+
           'model/contents/ObjectModel',
+          'model/contents/TextModel',
             'CameraModule'],
     function($,_,Backbone,
-
-             ObjectModel){
+             ObjectModel,
+             TextModel){
         var workSpace = Backbone.View.extend({
             el : $('#workSpace'),
 
@@ -15,6 +17,7 @@ define(['jquery','underscore','backbone',
                 _.bindAll(this);
                this.contentsCollection = this.options.contentsCollection;
                this.cameraModule = this.options.cameraModule;
+               this.camera = this.cameraModule.getCamera();
 
                this.eventBind();
                this.render();
@@ -36,6 +39,8 @@ define(['jquery','underscore','backbone',
                 var ctrlKey = 17;
                 var ctrlDown = false;
 
+                var camera_ = this.camera;
+
                 $(document).keydown(function(e)
                 {
                     if (e.keyCode == ctrlKey) ctrlDown = true;
@@ -49,7 +54,11 @@ define(['jquery','underscore','backbone',
                     moveEnable = true;
                     prevX = e.clientX;
                     prevY = e.clientY;
+
+                    this_.contentsCollection.setSelected();
                 })
+
+
 
                 $('#workSpace').bind('mousemove',function(e){
                     if(moveEnable)
@@ -57,26 +66,22 @@ define(['jquery','underscore','backbone',
                         var currX = e.clientX;
                         var currY = e.clientY;
 
-                        var scalar1 = currX-prevX;
-                        var scalar2 = currY-prevY;
+                        var scalar1 = (currX-prevX)/2;
+                        var scalar2 = (currY-prevY)/2;
 
-                        if(!ctrlDown)
+                        if(e.ctrlKey && e.shiftKey)
                         {
-                            console.log('pos');
-                            var pos3d = this_.controller.getPosition(scalar1,scalar2);
+                            camera_.rotateZ(-(scalar2+scalar1));
+                        }
+                        else if(e.ctrlKey)
+                        {
+                            camera_.rotateX(scalar2);
+                            camera_.rotateY(-scalar1);
 
-                            model_.set({
-                                    'translateX':pos3d.getX(),
-                                    'translateY':pos3d.getY(),
-                                    'translateZ':pos3d.getZ()}
-                            );
                         }
                         else
                         {
-
-                            var camera = this_.cameraModule.getCamera();
-                            camera.rotateX(3);
-
+                            camera_.setPosition( -scalar1, scalar2, 0);
                         }
 
                         prevX = currX;
@@ -88,14 +93,35 @@ define(['jquery','underscore','backbone',
 
 
                 $('#workSpace').bind('mousewheel',function(e){
-                    if(model_.isSelected())
+                    if(!this_.contentsCollection.getSelected())
                     {
-                        var pos3d = this_.controller.getDepth(e.originalEvent.wheelDelta/10);
-                        model_.set({
-                                'translateX':pos3d.getX(),
-                                'translateY':pos3d.getY(),
-                                'translateZ':pos3d.getZ()}
-                        );
+                        var scalar = e.originalEvent.wheelDelta/10;
+                        camera_.setPosition(0,0,scalar);
+                    }
+
+                });
+
+                $('#workSpace').on('keydown',function(e){
+
+                    switch( e.keyCode ){
+                        case 81:    //forward(q)
+                            camera_.moveFor();
+                            break;
+                        case 69:    //backword(e)
+                            camera_.moveBack();
+                            break;
+                        case 87:    //up(w)
+                            camera_.moveUp();
+                            break;
+                        case 83:    //down(s)
+                            camera_.moveDown();
+                            break;
+                        case 65:    //left(a)
+                            camera_.moveLeft();
+                            break;
+                        case 68:    //right(d)
+                            camera_.moveRight();
+                            break;
                     }
                 });
             },
@@ -115,26 +141,27 @@ define(['jquery','underscore','backbone',
            {
 
 
-               for(var i = 0 ; i < 1 ; i++)
+               for(var i = 0 ; i < 2 ; i++)
                {
                    var rotateX =  Math.floor(Math.random() * 359) + 1;
                    var rotateY =  Math.floor(Math.random() * 359) + 1;
                    var rotateZ =  Math.floor(Math.random() * 359) + 1;
 
-                   var objectModel2 = new ObjectModel({
+                   var textModel1 = new TextModel({
                        width : 100,
                        height : 100,
 
-                       translateX:i,
-                       translateY:i,
+                       translateX:100 + (500*i),
+
+                       translateY:-100,
                        translateZ:0,
 
-                       rotateX:rotateX,
-                       rotateY:rotateY,
-                       rotateZ:rotateZ
+                       rotateX:0,
+                       rotateY:44,
+                       rotateZ:0
                    });
 
-                   this.contentsCollection.add(objectModel2);
+                   this.contentsCollection.add(textModel1);
                }
 
 

@@ -62,11 +62,11 @@ define(['underscore','backbone',
            {
                if(model.get('type') == 'text')
                {
-                   this.views[model.cid] = new TextView({model: model,id:'view_'+model.cid}).render();
+                   this.views[model.cid] = new TextView({model: model,id:'view_'+model.cid,'cameraModule' : this.cameraModule}).render();
                }
                else if(model.get('type') == 'image')
                {
-                    this.views[model.cid] = new ImageView({model: model,id:'view_'+model.cid}).render();
+                    this.views[model.cid] = new ImageView({model: model,id:'view_'+model.cid,'cameraModule' : this.cameraModule}).render();
                }
                else if(model.get('type') == 'video')
                {
@@ -117,9 +117,20 @@ define(['underscore','backbone',
                        else
                        {
                            var setData ={}
-                           for(var i = 0 ; i < key.length ; i++)
+                           if(typeof(value)=='object')
                            {
-                               setData[key[i]] = value;
+                               for(var i = 0 ; i < key.length ; i++)
+                               {
+                                   setData[key[i]] = value[i];
+
+                               }
+                           }
+                           else
+                           {
+                               for(var i = 0 ; i < key.length ; i++)
+                               {
+                                   setData[key[i]] = value;
+                               }
                            }
 
                            model.set(setData);
@@ -165,9 +176,21 @@ define(['underscore','backbone',
                         else
                         {
                             var setData ={}
-                            for(var i = 0 ; i < key.length ; i++)
+
+                            if(typeof(value)=='object')
                             {
-                                setData[key[i]] = value;
+                                for(var i = 0 ; i < key.length ; i++)
+                                {
+                                    setData[key[i]] = value[i];
+
+                                }
+                            }
+                            else
+                            {
+                                for(var i = 0 ; i < key.length ; i++)
+                                {
+                                    setData[key[i]] = value;
+                                }
                             }
 
                             model.set(setData);

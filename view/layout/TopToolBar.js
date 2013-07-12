@@ -1,10 +1,13 @@
 define(['jquery','underscore','backbone',
     'text!template/layout/TopToolBar.html',
     'view/dialog/StyleView',
+
+    'model/contents/TextModel',
     'jquery_knob'],
     function($,_,Backbone,
              TopToolBarTemplate,
-             StyleView){
+             StyleView,
+             TextModel){
 
         var topToolBar = Backbone.View.extend({
             template : TopToolBarTemplate,
@@ -21,6 +24,7 @@ define(['jquery','underscore','backbone',
                 this.contentsCollection = this.options.contentsCollection;
                 this.render();
                 this.bindEvents();
+                this.initInsertButtons();
             },
 
             bindEvents : function()
@@ -35,6 +39,29 @@ define(['jquery','underscore','backbone',
                 this.contentsCollection.bind("selected",function(){
 
                     this_.activeMenuSelection();
+                });
+            },
+
+            initInsertButtons : function()
+            {
+                var this_ = this;
+                $('#textInsertButton').click(function(){
+
+
+
+                    this_.contentsCollection.add(new TextModel({
+                            width : 100,
+                            height : 100,
+
+                            translateX:100,
+                            translateY:100,
+                            translateZ:0,
+
+                            rotateX:0,
+                            rotateY:44,
+                            rotateZ:0
+                        }
+                    ));
                 });
             },
 
@@ -287,27 +314,16 @@ define(['jquery','underscore','backbone',
                     $('.objectBackgroundColorButtonToolTip').ColorPicker({
                         flat : true,
                         color : value,
-                        onChange :  function (hsb, hex, rgb) {
+                        onSubmit :  function (hsb, hex, rgb) {
                             var model = this_.contentsCollection.getSelected();
 
                             if(model)
                             {
-                                model.set('background','#'+hex);
+                                model.commitToCollection('background','#'+hex);
                             }
-                        },
-
-                        onSubmit : function()
-                        {
-                            var model = this_.contentsCollection.getSelected();
-
-                            if(model)
-                            {
-                                model.commitToCollection('background',value);
-                            }
-
                         }
-
                     });
+
 
                     $('.objectBackgroundColorButtonToolTip').ColorPickerSetColor(value);
                 }
@@ -332,13 +348,10 @@ define(['jquery','underscore','backbone',
                 {
                     $(toolTips[i]).each(function()
                     {
+                        $(this).hide();
 
-                        $(this).css('display','none');
                     })
                 }
-
-
-
 
             },
 

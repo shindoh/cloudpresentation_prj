@@ -41,6 +41,17 @@
                 }
             });
 
+            $(this).bind('focusout',function(e){
+
+                allEventRefresh(this);
+                $(this).attr('contenteditable',false);
+            });
+
+            $(this).bind('click',function(e){
+
+                $(this).attr('contenteditable',true);
+            });
+
 
             $(this).bind('click',function(e){
                 $(this).attr('contenteditable',true);

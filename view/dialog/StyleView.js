@@ -48,23 +48,38 @@ define(['jquery','underscore','backbone',
 
                 this.contentsCollection.bind('recoverEvent',function(param)
                 {
-                    var styleValue = $("#style_selector").val();
-                    var model = param.model;
-                    var key = param.key;
+                    var stylesKey={'borderWidth':true,'borderColor':true,'borderStyle':true,'borderTopLeftRadius':true,'borderTopRightRadius':true,'borderBottomLeftRadius':true,'borderBottomRightRadius':true,
+                        'boxShadows':true};
+                        var styleValue = $("#style_selector").val();
+                        var model = param.model;
+                        var key = param.key;
+                        var doRefresh = false;
 
-                    if(typeof(key)=='string')
-                    {
-                        model.commitBeforeData[key] = param.value;
-                    }
-                    else
-                    {
-                        for(var i = 0 ; i < key.length; i++)
+                        if(typeof(key)=='string')
                         {
-                            model.commitBeforeData[key[i]] = param.value;
+                            model.commitBeforeData[key] = param.value;
+                            doRefresh = true;
                         }
-                    }
+                        else
+                        {
+                            for(var i = 0 ; i < key.length; i++)
+                            {
 
-                    this_.activeStylePanel(styleValue,model);
+                                model.commitBeforeData[key[i]] = param.value[i];
+
+                                if(stylesKey[key[i]])
+                                {
+
+                                    doRefresh = true;
+                                }
+                            }
+                        }
+
+                        if(doRefresh)
+                        {
+                            this_.activeStylePanel(styleValue,model);
+                        }
+
                 });
             },
 
@@ -165,10 +180,15 @@ define(['jquery','underscore','backbone',
 
                     var boxShadows = model_.get('boxShadows');
                     boxShadows.push(boxShadow);
-
+                    model_.set('boxShadows',boxShadows);
                     this_.refreshStyleList(boxShadows,$('#boxShadowList'),model_,'boxShadows');
 
-
+                    var view = this_.contentsCollection.views[model_.cid];
+                    if(view)
+                    {
+                        console.log('updateView');
+                        view.updateView();
+                    }
                 });
 
                 var boxShadows = model_.get('boxShadows');
@@ -201,6 +221,13 @@ define(['jquery','underscore','backbone',
                     $(this).click(function(){
                         listItems_.splice(targetIdx,1);
                         this_.refreshStyleList(listItems_,listEl_,model_,key_);
+
+                        var view = this_.contentsCollection.views[model_.cid];
+                        if(view)
+                        {
+                            console.log('updateView');
+                            view.updateView();
+                        }
                     })
                 });
                 listEl.sortable();
@@ -367,12 +394,16 @@ define(['jquery','underscore','backbone',
 
                         $('#bottomRightCornerSlider').prev().find('input').trigger(event);
 
-                        var keys = ['borderTopLeftRadius',
-                            'borderTopRightRadius',
-                            'borderBottomLeftRadius',
-                            'borderBottomRightRadius'];
+                        var keys = {
+                            'borderTopLeftRadius' :val,
+                            'borderTopRightRadius' :val,
+                            'borderBottomLeftRadius' :val,
+                            'borderBottomRightRadius' :val};
 
-                        model_.commitToCollection(keys,val);
+
+                        model_.commitToCollection(keys);
+
+
                     }
                 });
 

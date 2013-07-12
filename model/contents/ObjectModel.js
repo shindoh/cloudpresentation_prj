@@ -6,7 +6,7 @@ define(['jquery','underscore','backbone'],
             type :'object',
             width : '100%',
             height : '100%',
-            background : null,
+            background : '#ffffff',
             translateX : 0,
             translateY : 0,
             translateZ : 0,
@@ -19,7 +19,12 @@ define(['jquery','underscore','backbone'],
             matrix3d : null,
 
             //style
-            borderWidth : 0
+            borderWidth : 0,
+            borderTopLeftRadius : 0,
+            borderTopRightRadius : 0,
+            borderBottomLeftRadius : 0,
+            borderBottomRightRadius : 0
+
 
         },
 
@@ -43,6 +48,7 @@ define(['jquery','underscore','backbone'],
 
             if(this.doCommited)
             {
+
                 this.commitBeforeData = this.copyObject(this.attributes);
                 this.doCommited = false;
 
@@ -51,7 +57,12 @@ define(['jquery','underscore','backbone'],
 
         isSelected : function()
         {
-            return this.selected;
+            var selected = false;
+            if(this.collection.getSelected()==this)
+            {
+                selected=true;
+            }
+            return selected;
         },
 
         commitToCollection : function(key,value)
@@ -63,8 +74,7 @@ define(['jquery','underscore','backbone'],
             {
                 prevValue = this.commitBeforeData[key[0]];
             }
-
-            if(typeof(value)=='object')
+            if(Object.prototype.toString.call(value)==='[object Array]')
             {
                 if(prevValue)
                 {
@@ -75,6 +85,26 @@ define(['jquery','underscore','backbone'],
                     prevValue = new Array();
                 }
             }
+            else if(typeof(key)=='object')
+            {
+                var obj = key;
+                var keys = [];
+                var values = [];
+                var prevValues = [];
+
+                for(var keyName in obj)
+                {
+                    keys.push(keyName);
+                    values.push(obj[keyName]);
+                    prevValues.push(this.commitBeforeData[keyName]);
+                }
+
+                key = keys;
+                value = values;
+                prevValue = prevValues;
+
+            }
+
 
             var historyData = {
                     'model' : this,
@@ -97,6 +127,7 @@ define(['jquery','underscore','backbone'],
 
                         if(value[i] != prevValue[i])
                         {
+
                             isChanged = true;
                             break;
                         }
@@ -109,8 +140,10 @@ define(['jquery','underscore','backbone'],
             }
             else if(historyData.value != historyData.prevValue)
             {
+                console.log('chnaged data',historyData.value,historyData.prevValue)
                 isChanged = true;
             }
+
 
             if(isChanged)
             {
@@ -127,27 +160,33 @@ define(['jquery','underscore','backbone'],
                 {
                     var setData = {};
 
-                    for(var i = 0;  i < key.length ; i++)
+                    if(value.length > 1)
                     {
-                        setData[key[i]] = value;
+                        for(var i = 0;  i < key.length ; i++)
+                        {
+                            setData[key[i]] = value[i];
+
+                        }
+                    }
+                    else
+                    {
+                        for(var i = 0;  i < key.length ; i++)
+                        {
+                            setData[key[i]] = value;
+                        }
                     }
 
 
+                    console.log('setData',setData);
                     this.set(setData);
                 }
 
-                              console.log(historyData);
+
                 this.collection.addToHistory(historyData);
             }
         },
 
         setSelected : function() {
-            this.selected = true;
-            this.collection.setSelected(this);
-        },
-
-        setSelected : function() {
-            this.selected = true;
             this.collection.setSelected(this);
         },
 

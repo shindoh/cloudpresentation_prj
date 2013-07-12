@@ -22,6 +22,11 @@
     font-size : 80px;
 }
 
+[contenteditable="true"].textEditBox {
+    display :inline-block;
+
+}
+
 .lcWord{
     font-size : 80px;
     display : lnline-block;
